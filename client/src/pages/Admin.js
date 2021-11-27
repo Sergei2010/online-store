@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { Container, Button } from 'react-bootstrap'
-import CreateType from '../components/modals/createType'
-import CreateBrand from '../components/modals/createBrand'
-import CreateDevice from '../components/modals/createDevice'
+import CreateBrand from '../components/modals/CreateBrand'
+import CreateDevice from '../components/modals/CreateDevice'
+import CreateType from '../components/modals/CreateType'
 
 const Admin = () => {
 	const [brandVisible, setBrandVisible] = useState(false)
@@ -19,8 +19,8 @@ const Admin = () => {
 			<Button variant={'outline-dark'} className='mt-4 p-2' onClick={() => setDeviceVisible(true)}>
 				Добавить устройство
 			</Button>
-			<CreateType show={typeVisible} onHide={() => setTypeVisible(false)} />
 			<CreateBrand show={brandVisible} onHide={() => setBrandVisible(false)} />
+			<CreateType show={typeVisible} onHide={() => setTypeVisible(false)} />
 			<CreateDevice show={deviceVisible} onHide={() => setDeviceVisible(false)} />
 		</Container>
 	)

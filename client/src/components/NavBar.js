@@ -30,7 +30,7 @@ const NavBar = observer(() => {
 							onClick={() => history.push(ADMIN_ROUTE)}>
 							Админ панель
 						</Button>
-						<Button variant={'outline-light'} className='me-2' onClick={() => logout()}>
+						<Button variant={'outline-light'} className='me-2' onClick={() => logOut()}>
 							Выйти
 						</Button>
 					</Nav>

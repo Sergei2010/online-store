@@ -1,11 +1,11 @@
-import Modal from 'react-bootstrap/Modal'
-import { Button, Form } from 'react-bootstrap'
+import React from 'react'
+import { Modal, Button, Form } from 'react-bootstrap'
 
 const CreateType = ({ show, onHide }) => {
 	return (
 		<Modal size='lg' centered show={show} onHide={onHide}>
 			<Modal.Header closeButton>
-				<Modal.Title id='contained-modal-title-vcenter'>Добавить тип</Modal.Title>
+				<Modal.Title id='contained-modal-title-vcenter'>Добавить новый тип</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
 				<Form>
@@ -13,10 +13,10 @@ const CreateType = ({ show, onHide }) => {
 				</Form>
 			</Modal.Body>
 			<Modal.Footer>
-				<Button variant='outline-danger' onClick={onHide}>
+				<Button variant={'outline-danger'} onClick={onHide}>
 					Закрыть
 				</Button>
-				<Button variant='outline-success' onClick={onHide}>
+				<Button variant={'outline-success'} onClick={onHide}>
 					Добавить
 				</Button>
 			</Modal.Footer>

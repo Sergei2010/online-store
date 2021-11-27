@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react'
-import Modal from 'react-bootstrap/Modal'
-import { Button, Dropdown, Form, Row, Col, FormControl } from 'react-bootstrap'
 import { Context } from '../../index'
+import { Modal, Button, Dropdown, Form, Row, Col } from 'react-bootstrap'
 
 const CreateDevice = ({ show, onHide }) => {
 	const { device } = useContext(Context)
@@ -12,11 +11,10 @@ const CreateDevice = ({ show, onHide }) => {
 	const removeInfo = (number) => {
 		setInfo(info.filter((i) => i.number !== number))
 	}
-
 	return (
 		<Modal size='lg' centered show={show} onHide={onHide}>
 			<Modal.Header closeButton>
-				<Modal.Title id='contained-modal-title-vcenter'>Добавить устройство</Modal.Title>
+				<Modal.Title id='contained-modal-title-vcenter'>Добавить новое устройство</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
 				<Form>
@@ -38,22 +36,22 @@ const CreateDevice = ({ show, onHide }) => {
 					</Dropdown>
 					<Form.Control className='mt-3' placeholder={'Введите название устройства'} />
 					<Form.Control
-						className='mt-3'
-						placeholder={'Введите стоимость устройства'}
 						type='number'
+						className='mt-3'
+						placeholder={'Введите  стоимость устройства'}
 					/>
-					<Form.Control className='mt-3' type='file' />
+					<Form.Control type='file' className='mt-3' />
 					<hr />
-					<Button variant='outline-dark' onClick={addInfo}>
-						Добавить новое свойство
+					<Button variant={'outline-dark'} onClick={addInfo}>
+						Добавит новое свойство
 					</Button>
 					{info.map((i) => (
-						<Row className='mt-2' key={i.number}>
+						<Row className='mt-4' key={i.number}>
 							<Col md={4}>
-								<FormControl placeholder='Введите название свойства' />
+								<Form.Control placeholder={'Введите название характеристики'} />
 							</Col>
 							<Col md={4}>
-								<FormControl placeholder='Введите описание свойства' />
+								<Form.Control placeholder={'Введите описание'} />
 							</Col>
 							<Col md={4}>
 								<Button variant={'outline-danger'} onClick={() => removeInfo(i.number)}>
@@ -65,10 +63,10 @@ const CreateDevice = ({ show, onHide }) => {
 				</Form>
 			</Modal.Body>
 			<Modal.Footer>
-				<Button variant='outline-danger' onClick={onHide}>
+				<Button variant={'outline-danger'} onClick={onHide}>
 					Закрыть
 				</Button>
-				<Button variant='outline-success' onClick={onHide}>
+				<Button variant={'outline-success'} onClick={onHide}>
 					Добавить
 				</Button>
 			</Modal.Footer>

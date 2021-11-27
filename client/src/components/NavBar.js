@@ -12,6 +12,11 @@ import { useHistory } from 'react-router-dom'
 const NavBar = observer(() => {
 	const { user } = useContext(Context)
 	const history = useHistory()
+	const logout = () => {
+		user.setUser({})
+		user.setIsAuth(false)
+	}
+
 	return (
 		<Navbar bg='dark' variant='dark' className='d-flex justify-content-between'>
 			<Container>
@@ -26,19 +31,19 @@ const NavBar = observer(() => {
 							onClick={() => history.push(ADMIN_ROUTE)}>
 							Админ панель
 						</Button>
-						<Button
-							variant={'outline-light'}
-							className='me-2'
-							onClick={() => history.push(LOGIN_ROUTE)}>
+						<Button variant={'outline-light'} className='me-2' onClick={() => logout()}>
 							Выйти
 						</Button>
 					</Nav>
 				) : (
 					<Nav style={{ color: 'white' }} className='p-2'>
-						<Button variant={'outline-light'} className='me-2'>
+						{/* <Button variant={'outline-light'} className='me-2'>
 							Админ панель
-						</Button>
-						<Button variant={'outline-light'} className='me-2' onClick={() => user.setIsAuth(true)}>
+						</Button> */}
+						<Button
+							variant={'outline-light'}
+							className='me-2'
+							onClick={() => history.push(LOGIN_ROUTE)}>
 							Авторизация
 						</Button>
 					</Nav>

@@ -12,7 +12,6 @@ import { useHistory } from 'react-router-dom'
 const NavBar = observer(() => {
 	const { user } = useContext(Context)
 	const history = useHistory()
-
 	const logOut = () => {
 		user.setUser({})
 		user.setIsAuth(false)
@@ -31,7 +30,7 @@ const NavBar = observer(() => {
 							onClick={() => history.push(ADMIN_ROUTE)}>
 							Админ панель
 						</Button>
-						<Button variant={'outline-light'} className='me-2' onClick={() => logOut()}>
+						<Button variant={'outline-light'} className='me-2' onClick={() => logout()}>
 							Выйти
 						</Button>
 					</Nav>

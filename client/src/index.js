@@ -5,14 +5,15 @@ import DeviceStore from './store/DeviceStore'
 import UserStore from './store/UserStore'
 
 export const Context = createContext(null)
-
 ReactDOM.render(
-	<Context.Provider
-		value={{
-			user: new UserStore(),
-			device: new DeviceStore()
-		}}>
-		<App />
-	</Context.Provider>,
+	<React.StrictMode>
+		<Context.Provider
+			value={{
+				user: new UserStore(),
+				device: new DeviceStore()
+			}}>
+			<App />
+		</Context.Provider>
+	</React.StrictMode>,
 	document.getElementById('root')
 )

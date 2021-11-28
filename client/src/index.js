@@ -5,6 +5,7 @@ import DeviceStore from './store/DeviceStore'
 import UserStore from './store/UserStore'
 
 export const Context = createContext(null)
+
 ReactDOM.render(
 	<React.StrictMode>
 		<Context.Provider

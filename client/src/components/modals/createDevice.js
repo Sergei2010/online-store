@@ -4,6 +4,11 @@ import { Modal, Button, Dropdown, Form, Row, Col } from 'react-bootstrap'
 
 const CreateDevice = ({ show, onHide }) => {
 	const { device } = useContext(Context)
+	// const [name, setName] = useState('')
+	// const [price, setPrice] = useState(0)
+	// const [file, setFile] = useState(null)
+	// const [brand, setBrand] = useState(null)
+	// const [type, setType] = useState(null)
 	const [info, setInfo] = useState([])
 	const addInfo = () => {
 		setInfo([...info, { title: '', description: '', number: Date.now() }])
@@ -11,6 +16,7 @@ const CreateDevice = ({ show, onHide }) => {
 	const removeInfo = (number) => {
 		setInfo(info.filter((i) => i.number !== number))
 	}
+	
 	return (
 		<Modal size='lg' centered show={show} onHide={onHide}>
 			<Modal.Header closeButton>

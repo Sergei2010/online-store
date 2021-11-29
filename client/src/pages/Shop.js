@@ -15,7 +15,7 @@ const Shop = observer(() => {
 	useEffect(() => {
 		fetchTypes().then((data) => device.setTypes(data))
 		fetchBrands().then((data) => device.setBrands(data))
-		fetchDevices().then((data) => device.setDevices(data.rows))
+		fetchDevices().then((data) => device.setDevises(data.rows))
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 	return (

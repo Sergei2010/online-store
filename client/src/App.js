@@ -13,11 +13,11 @@ const App = observer(() => {
 	useEffect(() => {
 		check()
 			.then((data) => {
-				user.setUser(true)
+				user.setUser(data) // заменил 'data' вместо 'true'
 				user.setIsAuth(true)
 			})
 			.finally(() => setLoading(false))
-			// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 	if (loading) {
 		return <Spinner animation={'grow'} />

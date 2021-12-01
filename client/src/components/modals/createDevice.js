@@ -41,6 +41,7 @@ const CreateDevice = observer(({ show, onHide }) => {
 		formData.append('brandId', device.selectedBrand.id)
 		formData.append('typeId', device.selectedType.id)
 		formData.append('info', JSON.stringify(info))
+
 		createDevice(formData).then((data) => onHide())
 	}
 
@@ -67,7 +68,7 @@ const CreateDevice = observer(({ show, onHide }) => {
 							{device.brands.map((brand) => (
 								<Dropdown.Item key={brand.id} onClick={() => device.setSelectedBrand(brand)}>
 									{brand.name}
-								</Dropdown.Item>)
+								</Dropdown.Item>
 							))}
 						</Dropdown.Menu>
 					</Dropdown>

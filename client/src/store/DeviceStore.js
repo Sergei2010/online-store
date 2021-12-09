@@ -10,6 +10,7 @@ export default class DeviceStore {
 		this._page = 1 // поле отвечает за текущую страницу
 		this._totalCount = 0 // общее количество товаров
 		this._limit = 4 // количество товаров на 1 странице
+		this._searchValue = '' // подстрока для поиска
 		makeAutoObservable(this) // уловить существующие свойства объекта
 	}
 	setTypes(types) {
@@ -35,6 +36,12 @@ export default class DeviceStore {
 	setTotalCount(count) {
 		this._totalCount = count
 	}
+	setLimit(limit) {
+		this._limit = limit
+	}
+	setSearchValue(searchValue) {
+		this._searchValue = searchValue
+	}
 	get types() {
 		return this._types
 	}
@@ -58,5 +65,8 @@ export default class DeviceStore {
 	}
 	get limit() {
 		return this._limit
+	}
+	get searchValue() {
+		return this._searchValue
 	}
 }

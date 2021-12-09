@@ -11,14 +11,20 @@ import { useHistory } from 'react-router-dom'
 
 const NavBar = observer(() => {
 	const { user } = useContext(Context)
-	const [searchValue, setSearchValue] = useState('')
+	const { device } = useContext(Context)
+	const [value, setValue] = useState('')
 	const history = useHistory()
 	const logOut = () => {
 		user.setUser({})
 		user.setIsAuth(false)
 	}
-	const handleSearch = (e) => {
-		setSearchValue(e.target.value)
+	const handleValue = (e) => {
+		setValue(e.target.value)
+	}
+
+	const handleSearch = () => {
+		device.setSearchValue(value)
+		console.log('device.searchValue: ', device.searchValue)
 	}
 	return (
 		<Navbar bg='dark' variant='dark' className='d-flex justify-content-between'>
@@ -31,12 +37,9 @@ const NavBar = observer(() => {
 						className='border border-light me-2'
 						style={{ background: 'black', color: 'white' }}
 						placeholder='Введите наименование товара'
-						onChange={handleSearch}
+						onChange={handleValue}
 					/>
-					<Button
-						variant={'outline-light'}
-						className='me-2'
-						onClick={() => console.log('searchValue: ', searchValue)}>
+					<Button variant={'outline-light'} className='me-2' onClick={handleSearch}>
 						Найти
 					</Button>
 				</Nav>

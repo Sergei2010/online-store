@@ -12,7 +12,7 @@ const DeviceItem = ({ device }) => {
 			<Card style={{ width: 150, poiter: 'cursor', border: 'light' }}>
 				<Image width={150} height={150} src={process.env.REACT_APP_API_URL + device.img} />
 				<Row className='mt-1 d-flex justify-content-between align-items-center text-black-50'>
-					<div>Samsung...</div>
+					<div>{device.name}</div>
 					<div className='d-flex align-itens-center'>
 						<div>{device.rating}</div>
 						<Image width={10} height={10} src={star} />

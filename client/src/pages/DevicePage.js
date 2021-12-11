@@ -3,10 +3,13 @@ import { Container, Col, Image, Row, Card, Button } from 'react-bootstrap'
 import { useParams } from 'react-router-dom'
 import bigStar from '../assets/bigStar.png'
 import { fetchOneDevice } from '../http/deviceApi'
+// import { useHistory } from 'react-router-dom'
+// import { BASKET_ROUTE } from '../utils/consts'
 
 const DevicePage = () => {
 	const [device, setDevice] = useState({ info: [] })
 	const { id } = useParams()
+	// const history = useHistory()
 	useEffect(() => {
 		fetchOneDevice(id).then((data) => setDevice(data))
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -38,7 +41,13 @@ const DevicePage = () => {
 						className='d-flex flex-column align-items-center justify-content-around'
 						style={{ width: 300, height: 300, fontSize: 52, border: '5px solid lightgrey' }}>
 						<h3>От: {device.price} руб.</h3>
-						<Button variant={'outline-dark'}>Добавить в корзину</Button>
+						<Button
+							variant={'outline-dark'}
+							onClick={() => {
+								console.log('Go To Basket')
+							}}>
+							Добавить в корзину
+						</Button>
 					</Card>
 				</Col>
 			</Row>

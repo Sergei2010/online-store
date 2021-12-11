@@ -9,6 +9,7 @@ import { observer } from 'mobx-react-lite'
 import { Context } from '../index'
 import { fetchBrands, fetchDevices, fetchTypes } from '../http/deviceApi'
 import Pages from '../components/Pages'
+// import DeviceStore from '../store/DeviceStore'
 
 const Shop = observer(() => {
 	const { device } = useContext(Context)
@@ -17,21 +18,70 @@ const Shop = observer(() => {
 		fetchTypes().then((data) => device.setTypes(data))
 		fetchBrands().then((data) => device.setBrands(data))
 		fetchDevices(null, null, 1, device.limit).then((data) => {
-			device.setDevises(data.rows)
+			device.setDevices(data.rows)
 			device.setTotalCount(data.count) // сколько товаров получили, поле "count" от сервера
 		})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
-	useEffect(() => {
+	/* useEffect(() => {
 		fetchDevices(device.selectedType.id, device.selectedBrand.id, device.page, device.limit).then(
 			(data) => {
-				device.setDevises(data.rows)
+				device.setDevices(data.rows)
 				device.setTotalCount(data.count)
 			}
 		)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [device.page, device.selectedType, device.selectedBrand])
+ */
+
+	useEffect(() => {
+		if (!device.searchValue) {
+			fetchDevices(device.selectedType.id, device.selectedBrand.id, device.page, device.limit).then(
+				(data) => {
+					device.setDevices(data.rows)
+					device.setTotalCount(data.count)
+				}
+			)
+		} else {
+			fetchDevices(null, null, 1, device.totalCount)
+				.then((data) => {
+					return (data = Object.values(data.rows))
+				})
+				.then((data) => {
+					data = data.filter((i) => {
+						return i.name.includes(device.searchValue)
+					})
+					return data
+				})
+				.then((data) => {
+					// console.log('data: ', data)
+					device.setDevices(data)
+					device.setTotalCount(data.length)
+				})
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [device.page, device.selectedType, device.selectedBrand, device.searchValue])
+
+	// поиск по названию товара
+	/* useEffect(() => {
+		fetchDevices(null, null, 1, device.totalCount)
+			.then((data) => {
+				return (data = Object.values(data.rows))
+			})
+			.then((data) => {
+				data = data.filter((i) => {
+					return i.name.includes(device.searchValue)
+				})
+				return data
+			})
+			.then((data) => {
+				// console.log('data: ', data)
+				device.setDevices(data)
+				device.setTotalCount(data.length)
+			})
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [device.searchValue]) */
 
 	return (
 		<Container>

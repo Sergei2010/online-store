@@ -18,18 +18,21 @@ const NavBar = observer(() => {
 		user.setUser({})
 		user.setIsAuth(false)
 	}
-	const handleValue = (e) => {
-		setValue(e.target.value)
-	}
-
-	const handleSearch = () => {
+	const handleSearch = (e) => {
 		device.setSearchValue(value)
-		console.log('device.searchValue: ', device.searchValue)
+		history.push(SHOP_ROUTE)
+		setValue('')
 	}
 	return (
 		<Navbar bg='dark' variant='dark' className='d-flex justify-content-between'>
 			<Container>
-				<NavLink style={{ color: 'white' }} to={SHOP_ROUTE} className='p-2'>
+				<NavLink
+					style={{ color: 'white' }}
+					to={SHOP_ROUTE}
+					className='p-2'
+					onClick={() => {
+						device.setSearchValue('')
+					}}>
 					КупиДевайс
 				</NavLink>
 				<Nav style={{ color: 'white' }} className='p-2 col-4'>
@@ -37,9 +40,12 @@ const NavBar = observer(() => {
 						className='border border-light me-2'
 						style={{ background: 'black', color: 'white' }}
 						placeholder='Введите наименование товара'
-						onChange={handleValue}
+						value={value}
+						onChange={(e) => {
+							setValue(e.target.value)
+						}}
 					/>
-					<Button variant={'outline-light'} className='me-2' onClick={handleSearch}>
+					<Button variant={'outline-light'} className='me-2' onClick={() => handleSearch()}>
 						Найти
 					</Button>
 				</Nav>

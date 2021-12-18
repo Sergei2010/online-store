@@ -10,8 +10,8 @@ const path = require('path')
 
 const PORT = process.env.PORT || 5000
 const app = express()
-app.use(cors())
-app.use(express.json())
+app.use(cors()) // отправлять запросы с браузера
+app.use(express.json()) // чтобы приложение могло парсить формат "json"
 // явно указываем серверу о необходимости для файлов из папки "static" раздавать как статику
 app.use(express.static(path.resolve(__dirname, 'static')))
 app.use(fileUpload({}))

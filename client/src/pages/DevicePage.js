@@ -1,24 +1,41 @@
-import React, { useState, useEffect } from 'react'
-import { Container, Col, Image, Row, Card, Button } from 'react-bootstrap'
-import { useParams } from 'react-router-dom'
+import React, { useEffect, useState, useContext } from 'react'
+import { Button, Card, Col, Container, Image, Row } from 'react-bootstrap'
 import bigStar from '../assets/bigStar.png'
-import { fetchOneDevice } from '../http/deviceApi'
-// import { useHistory } from 'react-router-dom'
-// import { BASKET_ROUTE } from '../utils/consts'
+import { useParams } from 'react-router-dom'
+import { fetchOneDevice } from '../http/deviceAPI'
+import { addDevice } from '../http/basketAPI'
+import { Context } from '../index'
 
 const DevicePage = () => {
+	const { user } = useContext(Context)
 	const [device, setDevice] = useState({ info: [] })
 	const { id } = useParams()
 	// const history = useHistory()
 	useEffect(() => {
-		fetchOneDevice(id).then((data) => setDevice(data))
+		fetchOneDevice(id).then((data) => {
+			return setDevice(data)
+		})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
+	const addToBasket = async () => {
+		try {
+			const formData = new FormData()
+			formData.append('basketId', user.basket.basketId)
+			formData.append('deviceId', id)
+			const basketDevice = await addDevice(formData)
+			console.log('basketDevice--after--addDevice: ', basketDevice)
+		} catch (e) {
+			alert(e.response.data.message)
+		}
+	}
+
 	return (
 		<Container className='mt-2'>
 			<Row>
 				<Col md={4}>
-					<Image width={300} height={300} src={process.env.REACT_APP_API_URL + device.img} />
+					{device.img && (
+						<Image width={300} height={300} src={process.env.REACT_APP_API_URL + device.img} />
+					)}
 				</Col>
 				<Col md={4}>
 					<div className='d-flex flex-column align-items-center'>
@@ -41,11 +58,7 @@ const DevicePage = () => {
 						className='d-flex flex-column align-items-center justify-content-around'
 						style={{ width: 300, height: 300, fontSize: 52, border: '5px solid lightgrey' }}>
 						<h3>От: {device.price} руб.</h3>
-						<Button
-							variant={'outline-dark'}
-							onClick={() => {
-								console.log('Go To Basket')
-							}}>
+						<Button variant={'outline-dark'} onClick={() => addToBasket()}>
 							Добавить в корзину
 						</Button>
 					</Card>

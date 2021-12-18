@@ -7,7 +7,7 @@ import BrandBar from '../components/BrandBar'
 import DeviceList from '../components/DeviceList'
 import { observer } from 'mobx-react-lite'
 import { Context } from '../index'
-import { fetchBrands, fetchDevices, fetchTypes } from '../http/deviceApi'
+import { fetchBrands, fetchDevices, fetchTypes } from '../http/deviceAPI'
 import Pages from '../components/Pages'
 // import DeviceStore from '../store/DeviceStore'
 
@@ -24,17 +24,6 @@ const Shop = observer(() => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
-	/* useEffect(() => {
-		fetchDevices(device.selectedType.id, device.selectedBrand.id, device.page, device.limit).then(
-			(data) => {
-				device.setDevices(data.rows)
-				device.setTotalCount(data.count)
-			}
-		)
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [device.page, device.selectedType, device.selectedBrand])
- */
-
 	useEffect(() => {
 		if (!device.searchValue) {
 			fetchDevices(device.selectedType.id, device.selectedBrand.id, device.page, device.limit).then(
@@ -43,7 +32,8 @@ const Shop = observer(() => {
 					device.setTotalCount(data.count)
 				}
 			)
-		} else {
+		} else { 
+			// поиск по названию товара
 			fetchDevices(null, null, 1, device.totalCount)
 				.then((data) => {
 					return (data = Object.values(data.rows))
@@ -62,26 +52,6 @@ const Shop = observer(() => {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [device.page, device.selectedType, device.selectedBrand, device.searchValue])
-
-	// поиск по названию товара
-	/* useEffect(() => {
-		fetchDevices(null, null, 1, device.totalCount)
-			.then((data) => {
-				return (data = Object.values(data.rows))
-			})
-			.then((data) => {
-				data = data.filter((i) => {
-					return i.name.includes(device.searchValue)
-				})
-				return data
-			})
-			.then((data) => {
-				// console.log('data: ', data)
-				device.setDevices(data)
-				device.setTotalCount(data.length)
-			})
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [device.searchValue]) */
 
 	return (
 		<Container>

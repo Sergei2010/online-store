@@ -32,7 +32,7 @@ const Shop = observer(() => {
 					device.setTotalCount(data.count)
 				}
 			)
-		} else { 
+		} else {
 			// поиск по названию товара
 			fetchDevices(null, null, 1, device.totalCount)
 				.then((data) => {

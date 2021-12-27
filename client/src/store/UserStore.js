@@ -4,7 +4,8 @@ export default class UserStore {
 	constructor() {
 		this._isAuth = false
 		this._user = {}
-		this._basket={}
+		this._basket = {}
+		this._device = []
 		makeAutoObservable(this)
 	}
 	setIsAuth(bool) {
@@ -18,6 +19,10 @@ export default class UserStore {
 		this._basket = basket
 	}
 
+	setDevice(device) {
+		this._device = device
+	}
+
 	get isAuth() {
 		return this._isAuth
 	}
@@ -29,5 +34,8 @@ export default class UserStore {
 	get basket() {
 		return this._basket
 	}
-	
+
+	get device() {
+		return this._device
+	}
 }

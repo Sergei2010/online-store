@@ -8,7 +8,11 @@ import { DEVICE_ROUTE } from '../utils/consts'
 const DeviceItem = ({ device }) => {
 	const history = useHistory()
 	return (
-		<Col md={3} className='mt-5' onClick={() => history.push(DEVICE_ROUTE + '/' + device.id)}>
+		<Col
+			md={3}
+			className='mt-5'
+			style={{ cursor: 'pointer' }}
+			onClick={() => history.push(DEVICE_ROUTE + '/' + device.id)}>
 			<Card
 				className='shadow p-3 mb-5 bg-white rounded'
 				style={{ poiter: 'cursor', border: 'light' }}>

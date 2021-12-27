@@ -1,31 +1,43 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { Button, Card, Col, Container, Image, Row } from 'react-bootstrap'
 import bigStar from '../assets/bigStar.png'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import { fetchOneDevice } from '../http/deviceAPI'
-import { addDevice } from '../http/basketAPI'
+import { addDeviceToBasket } from '../http/basketAPI'
+import { observer } from 'mobx-react-lite'
 import { Context } from '../index'
+import { SHOP_ROUTE } from '../utils/consts'
+import { toJS } from 'mobx'
 
-const DevicePage = () => {
+const DevicePage = observer(() => {
 	const { user } = useContext(Context)
+	if (!user) {
+		console.error('Нет данных пользователя ...')
+	}
 	const [device, setDevice] = useState({ info: [] })
+	const history = useHistory()
 	const { id } = useParams()
-	// const history = useHistory()
+	const userId = toJS(user.user.id)
+	const basketId = toJS(user.basket.id)
+	// console.log('basketId: ', basketId, 'userId: ', userId)
 	useEffect(() => {
 		fetchOneDevice(id).then((data) => {
-			return setDevice(data)
+			return setDevice(data) // ищу по id Device и обновляю state
 		})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 	const addToBasket = async () => {
 		try {
 			const formData = new FormData()
-			formData.append('basketId', user.basket.basketId)
+			formData.append('userId', userId)
+			formData.append('basketId', basketId)
 			formData.append('deviceId', id)
-			const basketDevice = await addDevice(formData)
-			console.log('basketDevice--after--addDevice: ', basketDevice)
+			await addDeviceToBasket(formData) // отправляю device на сервер
+			// console.log('deviceToBasket: ', deviceToBasket)
+			user.setDevice(id)
+			history.push(SHOP_ROUTE)
 		} catch (e) {
-			alert(e.response.data.message)
+			alert(e.message)
 		}
 	}
 
@@ -76,6 +88,6 @@ const DevicePage = () => {
 			</Row>
 		</Container>
 	)
-}
+})
 
 export default DevicePage

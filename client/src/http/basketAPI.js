@@ -1,14 +1,19 @@
 import { $authHost } from './index'
 
-// создаю basket при регистрации user
-export const createBasket = async (basket) => {
-	const { data } = await $authHost.post('api/basket', basket)
-	console.log('data--after--API: ', data)
+// добавить device в корзину
+export const addDeviceToBasket = async (device) => {
+	const { data } = await $authHost.post('api/basket', device)
 	return data
 }
 
-// добавить device в корзину
-export const addDevice = async (device) => {
-	const { data } = await $authHost.post('api/basket', device)
+// ищу одну корзину
+export const fetchOneBasket = async (id) => {
+	const { data } = await $authHost.get('api/basket', { params: { id } })
+	return data
+}
+
+// ищу все basketDevices
+export const fetchBasketDevices = async (id) => {
+	const { data } = await $authHost.get('api/basket/')
 	return data
 }

@@ -5,9 +5,10 @@ import Button from 'react-bootstrap/Button'
 import { NavLink, useLocation, useHistory } from 'react-router-dom'
 import { LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from '../utils/consts'
 import { login, registration } from '../http/userAPI'
-import { createBasket } from '../http/basketAPI'
+import { fetchOneBasket } from '../http/basketAPI'
 import { observer } from 'mobx-react-lite'
 import { Context } from '../index'
+// import { toJS } from 'mobx'
 
 const Auth = observer(() => {
 	const { user } = useContext(Context)
@@ -15,27 +16,32 @@ const Auth = observer(() => {
 	const history = useHistory()
 	const isLogin = location.pathname === LOGIN_ROUTE
 	const [email, setEmail] = useState('')
-	const [basket, setBasket] = useState({})
 	const [password, setPassword] = useState('')
 
 	const click = async () => {
 		try {
-			let dataUser
+			let data
 			if (isLogin) {
-				dataUser = await login(email, password)
+				data = await login(email, password)
+				// console.log('data--after--login: ', data)
 			} else {
-				dataUser = await registration(email, password)
-				const formData = new FormData()
-				formData.append('userId', dataUser.id)
-				const dataBasket = await createBasket(formData)
-				setBasket(dataBasket)
+				data = await registration(email, password)
+				console.log('data--after--registration: ', data)
 			}
-			user.setUser(user)
+			user.setUser(data) // почему "user"? ставлю "data"
 			user.setIsAuth(true)
+			// const userId = toJS(user.user.id)
+			// console.log('userId: ', userId)
+
+			const basket = await fetchOneBasket(data.id)
+			user.setBasket(basket)
+			// const basketId = toJS(user.basket.id)
+			// console.log('basketId--after--login: ', basketId)
+
 			user.setBasket(basket)
 			history.push(SHOP_ROUTE)
 		} catch (e) {
-			alert(e.response.data.message)
+			alert(e.message)
 		}
 	}
 

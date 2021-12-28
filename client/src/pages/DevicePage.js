@@ -17,9 +17,10 @@ const DevicePage = observer(() => {
 	const [device, setDevice] = useState({ info: [] })
 	const history = useHistory()
 	const { id } = useParams()
-	const userId = toJS(user.user.id)
-	const basketId = toJS(user.basket.id)
-	// console.log('basketId: ', basketId, 'userId: ', userId)
+	const userId = toJS(user.user.id) // id пользователя
+	const basketId = toJS(user.basketId) // id корзины
+	let basketDevices = toJS(user.devices) // что есть уже в корзине
+	// console.log('basketId: ', basketId, 'userId: ', userId, 'basketDevises: ', basketDevices)
 	useEffect(() => {
 		fetchOneDevice(id).then((data) => {
 			return setDevice(data) // ищу по id Device и обновляю state
@@ -33,8 +34,10 @@ const DevicePage = observer(() => {
 			formData.append('basketId', basketId)
 			formData.append('deviceId', id)
 			await addDeviceToBasket(formData) // отправляю device на сервер
-			// console.log('deviceToBasket: ', deviceToBasket)
-			user.setDevice(id)
+			// console.log('deviceToBasket--after--addToBasket: ', deviceToBasket)
+			basketDevices.push(Number(id))
+			user.setDevices(basketDevices)
+			// console.log('basketDevices--after--addToBasket: ', toJS(user.devices))
 			history.push(SHOP_ROUTE)
 		} catch (e) {
 			alert(e.message)

@@ -11,9 +11,13 @@ export const fetchOneBasket = async (id) => {
 	const { data } = await $authHost.get('api/basket', { params: { id } })
 	return data
 }
+// export const fetchOneBasket = async (id) => {
+// 	const { data } = await $authHost.get('api/basket/' + id)
+// 	return data
+// }
 
 // ищу все basketDevices
 export const fetchBasketDevices = async (id) => {
-	const { data } = await $authHost.get('api/basket/')
+	const { data } = await $authHost.get('api/basket/', { params: { basketId: id } })
 	return data
 }

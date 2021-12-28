@@ -8,7 +8,6 @@ import { login, registration } from '../http/userAPI'
 import { fetchOneBasket } from '../http/basketAPI'
 import { observer } from 'mobx-react-lite'
 import { Context } from '../index'
-// import { toJS } from 'mobx'
 
 const Auth = observer(() => {
 	const { user } = useContext(Context)
@@ -18,6 +17,7 @@ const Auth = observer(() => {
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 
+	// по клику выполняется или Login или Registration
 	const click = async () => {
 		try {
 			let data
@@ -34,11 +34,11 @@ const Auth = observer(() => {
 			// console.log('userId: ', userId)
 
 			const basket = await fetchOneBasket(data.id)
-			user.setBasket(basket)
-			// const basketId = toJS(user.basket.id)
-			// console.log('basketId--after--login: ', basketId)
+			user.setBasketId(basket[0])
+			user.setDevices(basket[1])
+			// console.log('basketId--after--login: ', basket[0])
+			// console.log('devices--after--login: ', basket[1])
 
-			user.setBasket(basket)
 			history.push(SHOP_ROUTE)
 		} catch (e) {
 			alert(e.message)

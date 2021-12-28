@@ -14,20 +14,23 @@ class BasketController {
 	// ищу одну корзину по внешнему ключю userId
 	async getOne(req, res, next) {
 		const { id } = req.query
-		// if (!id) {
-		// 	return next(ApiError.badRequest('Очень некорректные данные для пользователя'))
-		// }
-		const basket = await Basket.findOne({ where: { userId: id } })
-		return res.json(basket)
-	}
-	// ищу все BasketDevices
-	async getAll(req, res, next) {
-		const { basketId } = req.query
-		if (!basketId) {
+		if (!id) {
 			return next(ApiError.badRequest('Некорректные данные для пользователя'))
 		}
-		const basketDevices = await BasketDevice.findAndCountAll({ where: { basketId } })
-		return res.json(basketDevices)
+		let basketData = []
+		const basket = await Basket.findOne({
+			where: { userId: id }
+		})
+		const basketDevice = await BasketDevice.findAll({
+			where: { basketId: basket.id }
+		})
+		basketData.push(basket.id)
+		basketData.push(
+			basketDevice.map((i) => {
+				return i.deviceId
+			})
+		)
+		return res.json(basketData)
 	}
 }
 

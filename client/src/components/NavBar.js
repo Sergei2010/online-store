@@ -10,13 +10,16 @@ import Container from 'react-bootstrap/Container'
 import { useHistory } from 'react-router-dom'
 import cart_white from '../assets/cart_white.png'
 import cart_black from '../assets/cart_black.png'
-// import { fetchBasketDevices } from '../http/basketAPI'
-// import { toJS } from 'mobx'
+import { toJS } from 'mobx'
+import Declension from '../components/declension'
 
 const NavBar = observer(() => {
 	const { user } = useContext(Context)
+	const deviceCount = toJS(user.devices).length
+	// console.log('deviceCount--in--NavBar: ', deviceCount)
 	const { device } = useContext(Context)
-	const [value, setValue] = useState('Корзина пуста')
+	const [value, setValue] = useState('')
+	const [count, setCount] = useState('Корзина пуста')
 	const [atrSrc, setAtrSrc] = useState(cart_white)
 	const history = useHistory()
 	const logOut = () => {
@@ -32,9 +35,11 @@ const NavBar = observer(() => {
 		console.log('Переход в корзину')
 		history.push(BASKET_ROUTE)
 	}
+	// const devices = toJS(user.devices)
 	useEffect(() => {
-		setValue()
-	}, [])
+		setCount(deviceCount)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [deviceCount])
 
 	return (
 		<Navbar bg='dark' variant='dark' className='d-flex justify-content-around'>
@@ -70,7 +75,9 @@ const NavBar = observer(() => {
 						onMouseOut={() => setAtrSrc(cart_white)}>
 						<div className='d-flex align-itens-center justify-content-between'>
 							<Image src={atrSrc} width={20} height={20} className='align-self-center me-2' />
-							<div>{value}</div>
+							<div>
+								<Declension val={count} />
+							</div>
 						</div>
 					</Button>
 				</Nav>

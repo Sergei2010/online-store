@@ -2,16 +2,27 @@ import React, { useContext, useEffect } from 'react'
 import { Container } from 'react-bootstrap'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import TypeBar from '../components/TypeBar'
-import BrandBar from '../components/BrandBar'
-import DeviceList from '../components/DeviceList'
+import TypeBar from '../../components/TypeBar'
+import BrandBar from '../../components/BrandBar'
+import DeviceList from '../../components/DeviceList'
 import { observer } from 'mobx-react-lite'
-import { Context } from '../index'
-import { fetchBrands, fetchDevices, fetchTypes } from '../http/deviceAPI'
-import Pages from '../components/Pages'
+import { Context } from '../../index'
+import { fetchBrands, fetchDevices, fetchTypes } from '../../http/deviceAPI'
+import Pages from '../../components/Pages'
+import { toJS } from 'mobx'
+import './style.css'
 // import DeviceStore from '../store/DeviceStore'
 
 const Shop = observer(() => {
+	const { user } = useContext(Context)
+	let userName = toJS(user.user.email) // приветствие посетителя
+	if (!userName) {
+		userName = 'посетитель ...'
+	} else {
+		const index = userName.indexOf('@', 0)
+		userName = userName.slice(0, index)
+	}
+
 	const { device } = useContext(Context)
 
 	useEffect(() => {
@@ -55,6 +66,9 @@ const Shop = observer(() => {
 
 	return (
 		<Container>
+			<div className='mt-4 mb-4'>
+				<h2 className='title'>Привет, {userName}</h2>
+			</div>
 			<Row className='mt-2'>
 				<Col md={3}>
 					<TypeBar />

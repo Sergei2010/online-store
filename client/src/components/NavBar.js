@@ -11,7 +11,8 @@ import { useHistory } from 'react-router-dom'
 import cart_white from '../assets/cart_white.png'
 import cart_black from '../assets/cart_black.png'
 import { toJS } from 'mobx'
-import Declension from '../components/declension'
+import Declension from './Declension'
+import { fetchDevices } from '../http/deviceAPI'
 
 const NavBar = observer(() => {
 	const { user } = useContext(Context)
@@ -19,7 +20,7 @@ const NavBar = observer(() => {
 	// console.log('deviceCount--in--NavBar: ', deviceCount)
 	const { device } = useContext(Context)
 	const [value, setValue] = useState('')
-	const [count, setCount] = useState('Корзина пуста')
+	const [count, setCount] = useState('')
 	const [atrSrc, setAtrSrc] = useState(cart_white)
 	const history = useHistory()
 	const logOut = () => {
@@ -49,7 +50,13 @@ const NavBar = observer(() => {
 					to={SHOP_ROUTE}
 					className='d-flex justify-content-center p-2 col-2'
 					onClick={() => {
-						device.setSearchValue('')
+						setValue('')
+						fetchDevices(null, null, 1, device.limit).then((data) => {
+							device.setDevices(data.rows)
+							device.setTotalCount(data.count) // сколько товаров получили, поле "count" от сервера
+						})
+						device.setSelectedType({}) // обнуляю фильтр
+						device.setSelectedBrand({}) // - " -
 					}}>
 					КупиДевайс
 				</NavLink>
@@ -75,9 +82,7 @@ const NavBar = observer(() => {
 						onMouseOut={() => setAtrSrc(cart_white)}>
 						<div className='d-flex align-itens-center justify-content-between'>
 							<Image src={atrSrc} width={20} height={20} className='align-self-center me-2' />
-							<div>
-								<Declension val={count} />
-							</div>
+							<div>{!count ? 'Корзина пуста' : <Declension val={count} />}</div>
 						</div>
 					</Button>
 				</Nav>

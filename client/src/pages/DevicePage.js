@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react'
 import { Button, Card, Col, Container, Image, Row } from 'react-bootstrap'
 import bigStar from '../assets/bigStar.png'
 import { useParams, useHistory } from 'react-router-dom'
-import { fetchOneDevice } from '../http/deviceAPI'
+import { fetchOneDevice, fetchDevices } from '../http/deviceAPI'
 import { addDeviceToBasket } from '../http/basketAPI'
 import { observer } from 'mobx-react-lite'
 import { Context } from '../index'
@@ -11,10 +11,11 @@ import { toJS } from 'mobx'
 
 const DevicePage = observer(() => {
 	const { user } = useContext(Context)
+	const { device } = useContext(Context)
 	if (!user) {
 		console.error('Нет данных пользователя ...')
 	}
-	const [device, setDevice] = useState({ info: [] })
+	const [deviceData, setDeviceData] = useState({ info: [] })
 	const history = useHistory()
 	const { id } = useParams()
 	const userId = toJS(user.user.id) // id пользователя
@@ -23,7 +24,7 @@ const DevicePage = observer(() => {
 	// console.log('basketId: ', basketId, 'userId: ', userId, 'basketDevises: ', basketDevices)
 	useEffect(() => {
 		fetchOneDevice(id).then((data) => {
-			return setDevice(data) // ищу по id Device и обновляю state
+			return setDeviceData(data) // ищу по id Device и обновляю state
 		})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
@@ -38,6 +39,10 @@ const DevicePage = observer(() => {
 			basketDevices.push(Number(id))
 			user.setDevices(basketDevices)
 			// console.log('basketDevices--after--addToBasket: ', toJS(user.devices))
+			fetchDevices(null, null, 1, device.limit).then((data) => {
+				device.setDevices(data.rows)
+				device.setTotalCount(data.count) // сколько товаров получили, поле "count" от сервера
+			})
 			history.push(SHOP_ROUTE)
 		} catch (e) {
 			alert(e.message)
@@ -48,13 +53,13 @@ const DevicePage = observer(() => {
 		<Container className='mt-2'>
 			<Row>
 				<Col md={4}>
-					{device.img && (
-						<Image width={300} height={300} src={process.env.REACT_APP_API_URL + device.img} />
+					{deviceData.img && (
+						<Image width={300} height={300} src={process.env.REACT_APP_API_URL + deviceData.img} />
 					)}
 				</Col>
 				<Col md={4}>
 					<div className='d-flex flex-column align-items-center'>
-						<h2>{device.name}</h2>
+						<h2>{deviceData.name}</h2>
 						<div
 							className='d-flex align-items-center justify-content-center'
 							style={{
@@ -64,7 +69,7 @@ const DevicePage = observer(() => {
 								backgroundSize: 'cover',
 								fontSize: 64
 							}}>
-							{device.rating}
+							{deviceData.rating}
 						</div>
 					</div>
 				</Col>
@@ -72,7 +77,7 @@ const DevicePage = observer(() => {
 					<Card
 						className='d-flex flex-column align-items-center justify-content-around'
 						style={{ width: 300, height: 300, fontSize: 52, border: '5px solid lightgrey' }}>
-						<h3>От: {device.price} руб.</h3>
+						<h3>От: {deviceData.price} руб.</h3>
 						<Button variant={'outline-dark'} onClick={() => addToBasket()}>
 							Добавить в корзину
 						</Button>
@@ -81,7 +86,7 @@ const DevicePage = observer(() => {
 			</Row>
 			<Row className='d-flex flex-column m-3'>
 				<h1>Характеристики</h1>
-				{device.info.map((info, index) => (
+				{deviceData.info.map((info, index) => (
 					<Row
 						key={info.id}
 						style={{ background: index % 2 === 0 ? 'lightgrey' : 'transparent', padding: 10 }}>

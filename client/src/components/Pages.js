@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import { observer } from 'mobx-react-lite'
 import { Context } from '../index'
 import { Pagination } from 'react-bootstrap'
+import './DeviceItem/style.css'
 
 const Pages = observer(() => {
 	const { device } = useContext(Context)
@@ -14,7 +15,7 @@ const Pages = observer(() => {
 		<Pagination className='mt-2'>
 			{pages.map((page) => (
 				<Pagination.Item
-					className='shadow-sm rounded me-1'
+					className='shadow-sm rounded me-1 bg-transporent device'
 					key={page}
 					active={device.page === page}
 					onClick={() => device.setPage(page)}>

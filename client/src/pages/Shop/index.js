@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import { Container } from 'react-bootstrap'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
+import { Row, Col } from 'react-bootstrap'
 import TypeBar from '../../components/TypeBar'
 import BrandBar from '../../components/BrandBar'
 import DeviceList from '../../components/DeviceList'
@@ -11,7 +10,6 @@ import { fetchBrands, fetchDevices, fetchTypes } from '../../http/deviceAPI'
 import Pages from '../../components/Pages'
 import { toJS } from 'mobx'
 import './style.css'
-// import DeviceStore from '../store/DeviceStore'
 
 const Shop = observer(() => {
 	const { user } = useContext(Context)

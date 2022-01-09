@@ -22,9 +22,16 @@
 	font-style: normal;
 	font-weight: normal;
 }
-.title {
+.basket {
 	font-family: 'PTSans-Regular', serif;
 	color: #8b4513;
 	text-align: right;
 	margin-right: 1em;
+}
+.basket-card {
+	background: #fff5ee;
+	text-indent: 5em;
+}
+.basket-card span {
+	font-family: 'PTSans-Bold';
 }

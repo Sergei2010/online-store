@@ -14,7 +14,7 @@ const App = observer(() => {
 		check()
 			.then((data) => {
 				user.setUser(true) // заменил 'data' вместо 'true'???
-				user.setIsAuth(true)
+				// user.setIsAuth(true)
 			})
 			.finally(() => setLoading(false))
 		// eslint-disable-next-line react-hooks/exhaustive-deps

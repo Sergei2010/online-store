@@ -10,7 +10,7 @@ const DeviceItem = ({ device }) => {
 	const history = useHistory()
 	return (
 		<Col md={3} className='mt-5' onClick={() => history.push(DEVICE_ROUTE + '/' + device.id)}>
-			<Card className='shadow p-3 mb-5 bg-transporent rounded device'>
+			<Card className='shadow p-3 mb-5 rounded device'>
 				<div className='d-flex justify-content-center align-items-center p-1'>
 					<Image width={150} height={150} src={process.env.REACT_APP_API_URL + device.img} />
 				</div>

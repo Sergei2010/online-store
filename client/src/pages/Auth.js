@@ -1,7 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { Container, Form } from 'react-bootstrap'
-import Card from 'react-bootstrap/Card'
-import Button from 'react-bootstrap/Button'
+import { Container, Form, Card, Button } from 'react-bootstrap'
 import { NavLink, useLocation, useHistory } from 'react-router-dom'
 import { LOGIN_ROUTE, REGISTRATION_ROUTE, SHOP_ROUTE } from '../utils/consts'
 import { login, registration } from '../http/userAPI'

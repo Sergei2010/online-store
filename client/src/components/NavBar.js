@@ -16,7 +16,9 @@ import { fetchDevices } from '../http/deviceAPI'
 
 const NavBar = observer(() => {
 	const { user } = useContext(Context)
-	const deviceCount = toJS(user.devices).length
+	const deviceCount = toJS(user.devices).filter(function (id) {
+		return id !== null // исключаю нулевые значения id
+	}).length
 	// console.log('deviceCount--in--NavBar: ', deviceCount)
 	const { device } = useContext(Context)
 	const [value, setValue] = useState('')
@@ -26,6 +28,7 @@ const NavBar = observer(() => {
 	const logOut = () => {
 		user.setUser({})
 		user.setIsAuth(false)
+		user.setDevices([])
 	}
 	const handleSearch = (e) => {
 		device.setSearchValue(value)
@@ -33,8 +36,7 @@ const NavBar = observer(() => {
 		setValue('')
 	}
 	const handleBasket = () => {
-		console.log('Переход в корзину')
-		history.push(BASKET_ROUTE)
+		toJS(user.isAuth) ? history.push(BASKET_ROUTE) : history.push(SHOP_ROUTE)
 	}
 	// const devices = toJS(user.devices)
 	useEffect(() => {

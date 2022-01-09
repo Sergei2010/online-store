@@ -11,7 +11,7 @@ const TypeBar = observer(() => {
 			<ListGroup className='shadow-sm p-2 mt-2 rounded'>
 				{device.types.map((type) => (
 					<ListGroup.Item
-						className='border-0 rounded bg-transparent'
+						className='border-0 rounded'
 						active={type.id === device.selectedType.id}
 						key={type.id}
 						onClick={() => device.setSelectedType(type)}>

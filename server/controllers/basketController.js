@@ -11,6 +11,18 @@ class BasketController {
 		const basketDevice = await BasketDevice.create({ userId, basketId, deviceId })
 		return res.json(basketDevice)
 	}
+	// удаляю device из корзины
+	async destroy(req, res, next) {
+		const { basketId, deviceId } = req.body
+		if (!basketId || !deviceId) {
+			return next(ApiError.badRequest('Некорректные данные для товара корзины'))
+		}
+		// удаляю BasketDevice по basketId и deviceId
+		const basketDevice = await BasketDevice.destroy({
+			where: { basketId, deviceId }
+		})
+		return res.json(basketDevice)
+	}
 	// ищу одну корзину по внешнему ключю userId
 	async getOne(req, res, next) {
 		const { id } = req.query

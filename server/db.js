@@ -1,6 +1,6 @@
-const { Sequelize } = require('sequelize')
+const { Sequelize } = require('sequelize') // Подключение к БД
 
-module.exports = new Sequelize(
+module.exports = new Sequelize( // Модель сообщает Sequelize несколько вещей о сущности (entity)
 	process.env.DB_NAME, // Названеи БД
 	process.env.DB_USER, // Пользователь
 	process.env.DB_PASSWORD, // Пароль

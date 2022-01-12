@@ -35,3 +35,9 @@
 .basket-card span {
 	font-family: 'PTSans-Bold';
 }
+.basket-card h3 {
+	text-indent: 1em;
+}
+.basket-card h5 {
+	text-indent: 2em;
+}

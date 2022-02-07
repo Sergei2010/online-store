@@ -2,9 +2,10 @@ import React, { useState, useContext, useEffect } from 'react'
 import { Context } from '../../index'
 import { toJS } from 'mobx'
 import { observer } from 'mobx-react-lite'
-import { Button, Card, Col, Container, Image, Row } from 'react-bootstrap'
+import { Card, Col, Container, Image, Row } from 'react-bootstrap'
 import { fetchDevices, fetchBrands, fetchTypes } from '../../http/deviceAPI'
 import { deleteDeviceFromBasket } from '../../http/basketAPI'
+import TotalPriceInBasket from './totalPriceInBasket'
 import './style.css'
 
 const Basket = observer(() => {
@@ -17,7 +18,7 @@ const Basket = observer(() => {
 	const count = (item) => {
 		return ids.filter((id) => id === item).length
 	}
-	// ниже добавлю ключ "count" в объект device
+	// ниже добавлю ключи "count" и "totalPrice" в объект device
 	// console.log('count--for--device: ', count(55))
 	const [devices, setDevices] = useState([])
 	const [types, setTypes] = useState([])
@@ -32,15 +33,18 @@ const Basket = observer(() => {
 			.then((data) => {
 				return data.filter((device) => {
 					device.count = count(device.id)
+					device.totalPrice = device.count * device.price
 					return ids.includes(device.id)
 				})
 			})
 			.then((data) => {
+				// первоначальный массив devices в корзине, включая (count && total.price)
 				setDevices(data)
 				// console.log('data--in--basket: ', data)
 			})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
+	// определяем brand по id
 	const getBrand = (id) => {
 		let result = brands.find((brand) => brand.id === id)
 		// console.log('brand--in--basket: ', result.name)
@@ -51,6 +55,7 @@ const Basket = observer(() => {
 			return null
 		}
 	}
+	// определяем type по id
 	const getType = (id) => {
 		let result = types.find((type) => type.id === id)
 		// console.log('type--in--basket: ', result.name)
@@ -61,6 +66,7 @@ const Basket = observer(() => {
 			return null
 		}
 	}
+	// удаление device из корзины
 	const deleteFromBasket = async (user, device) => {
 		const basketId = toJS(user.basketId)
 		const deviceId = toJS(device.id)
@@ -74,12 +80,14 @@ const Basket = observer(() => {
 				return id !== deviceId
 				// удаляю deviceId из списка
 			})
-			user.setDevices(ids) // обновляю Context для User
+			user.setDevices(ids) // обновляю Store после удаления
+			// console.log('user.devices--after--update: ', toJS(user.devices))
 			let data = devices.filter((device) => {
 				return device.id !== deviceId
 				// фильтрую массив devices
 			})
 			setDevices(data) // изменяю state для перерисовки страницы
+			// console.log('data--in--State--after--delete: ', data)
 		} catch (e) {
 			alert(e.message)
 		}
@@ -87,19 +95,39 @@ const Basket = observer(() => {
 	// уменьшаю кол-во товара в корзине
 	const dicrementCount = (device) => {
 		device.count--
-		// setDevices(...devices, device.count)
-		console.log('device.count--after--dicrementCount', device.count)
-		console.log('devices--after--dicrementCount', devices)
+		if (device.count === 0) {
+			deleteFromBasket(user, device)
+		}
+		//find the index of object from array that you want to update
+		const objIndex = devices.findIndex((obj) => obj.id === device.id)
+		// make new object of updated object
+		const updatedObj = {
+			...devices[objIndex],
+			count: device.count,
+			totalPrice: device.count * device.price
+		}
+		// make final new array of objects by combining updated object
+		const updatedDevices = [
+			...devices.slice(0, objIndex),
+			updatedObj,
+			...devices.slice(objIndex + 1)
+		]
+		// изменяю state после уменьшения количества товара
+		setDevices(updatedDevices)
+		// console.log('devices--after--dicrementCount', devices)
 		return device
 	}
 	// увеличиваю кол-во товара в корзине
 	const incrementCount = (device) => {
-		console.log('devices--before--incrementCount', devices)
 		device.count++
 		//find the index of object from array that you want to update
 		const objIndex = devices.findIndex((obj) => obj.id === device.id)
 		// make new object of updated object
-		const updatedObj = { ...devices[objIndex], count: device.count }
+		const updatedObj = {
+			...devices[objIndex],
+			count: device.count,
+			totalPrice: device.count * device.price
+		}
 		// make final new array of objects by combining updated object
 		const updatedDevices = [
 			...devices.slice(0, objIndex),
@@ -107,8 +135,6 @@ const Basket = observer(() => {
 			...devices.slice(objIndex + 1)
 		]
 		setDevices(updatedDevices)
-		console.log('device.count--after--incrementCount', device.count)
-		console.log('devices--after--incrementCount', devices)
 		return device
 	}
 
@@ -122,32 +148,6 @@ const Basket = observer(() => {
 				<Col className='col col-3 p-3'>Количество</Col>
 				<Col className='col col-3 p-3'>Цена (за ед.)</Col>
 			</Card>
-			{!devices && (
-				<Card className='card mt-2 d-flex justify-content-around shadow-sm pt-2 pb-2 basket-card'>
-					<Row className='row no-gutters'>
-						<Col className='col col-6'>
-							<div className='card-body'>
-								<h5 className='card-title'>Вы ещё не выбрали товары для покупки</h5>
-							</div>
-						</Col>
-						<Col className='col col-3 d-flex flex-column justify-content-center'>
-							<div
-								className='btn-group-lg d-flex justify-content-around'
-								role='group'
-								aria-label='Basic example'>
-								<button type='button' className='btn-outline-primary col-3 m-1'>
-									0
-								</button>
-							</div>
-						</Col>
-						<Col className='col col-3 d-flex flex-column justify-content-center'>
-							<div>
-								<span>0 рублей</span>
-							</div>
-						</Col>
-					</Row>
-				</Card>
-			)}
 			{devices &&
 				devices.map((device) => {
 					return (
@@ -203,7 +203,7 @@ const Basket = observer(() => {
 								</Col>
 								<Col className='col col-3 d-flex flex-column justify-content-center'>
 									<div>
-										<h4>{device.price * device.count} рублей</h4>
+										<h4>{device.totalPrice} рублей</h4>
 									</div>
 								</Col>
 							</Row>
@@ -211,16 +211,7 @@ const Basket = observer(() => {
 					)
 				})}
 			<hr />
-			<Row>
-				<Col className='col col-6'></Col>
-				<Col className='col col-6'>
-					<Card className='card mt-2 d-flex shadow-sm p-2 basket-card'>
-						<div>Цена товара(-ов)</div>
-						<div>Итого:</div>
-						<Button className='btn btn-outline-primary'>Оформить заказ</Button>
-					</Card>
-				</Col>
-			</Row>
+			<TotalPriceInBasket devices={devices} />
 		</Container>
 	)
 })

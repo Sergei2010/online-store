@@ -11,10 +11,12 @@ import './style.css'
 const Basket = observer(() => {
 	const { user } = useContext(Context)
 	const { device } = useContext(Context)
+	// получаю массив id товаров в корзине
 	let ids = toJS(user.devices).filter(function (id) {
 		return id !== null // исключаю нулевые значения id
 	})
 	// console.log('device--in--basket: ', ids)
+	// получаю количество товаров в корзине
 	const count = (item) => {
 		return ids.filter((id) => id === item).length
 	}
@@ -40,7 +42,7 @@ const Basket = observer(() => {
 			.then((data) => {
 				// первоначальный массив devices в корзине, включая (count && total.price)
 				setDevices(data)
-				// console.log('data--in--basket: ', data)
+				console.log('data--in--basket: ', data)
 			})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])

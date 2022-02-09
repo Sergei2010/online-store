@@ -10,20 +10,24 @@ import Container from 'react-bootstrap/Container'
 import { useHistory } from 'react-router-dom'
 import cart_white from '../assets/cart_white.png'
 import cart_black from '../assets/cart_black.png'
+import caret_up from '../assets/caret_up.png'
+import caret_down from '../assets/caret_down.png'
 import { toJS } from 'mobx'
 import Declension from './Declension'
 import { fetchDevices } from '../http/deviceAPI'
 
 const NavBar = observer(() => {
 	const { user } = useContext(Context)
-	const deviceCount = toJS(user.devices).filter(function (id) {
-		return id !== null // исключаю нулевые значения id
-	}).length
-	// console.log('deviceCount--in--NavBar: ', deviceCount)
 	const { device } = useContext(Context)
 	const [value, setValue] = useState('')
-	const [count, setCount] = useState('')
-	const [atrSrc, setAtrSrc] = useState(cart_white)
+	const [count, setCount] = useState(null)
+	useEffect(() => {
+		const deviceCount = toJS(user.devices).filter(function (id) {
+			return id !== null // исключаю нулевые значения id
+		}).length
+		setCount(deviceCount)
+	}, [user.devices])
+	const [cartSrc, setCartSrc] = useState(cart_white)
 	const history = useHistory()
 	const logOut = () => {
 		user.setUser({})
@@ -38,17 +42,16 @@ const NavBar = observer(() => {
 	const handleBasket = () => {
 		toJS(user.isAuth) ? history.push(BASKET_ROUTE) : history.push(SHOP_ROUTE)
 	}
-	// const devices = toJS(user.devices)
-	useEffect(() => {
-		setCount(deviceCount)
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [deviceCount])
+	// меняю значение сортировки в Store
+	const onSort = () => {
+		device.sort === 'DESC' ? device.setSort('ASC') : device.setSort('DESC')
+	}
 
 	return (
 		<Navbar bg='dark' variant='dark' className='d-flex justify-content-around'>
 			<Container>
 				<NavLink
-					style={{ color: 'white' }}
+					style={{ color: 'white', role: 'button' }}
 					to={SHOP_ROUTE}
 					className='d-flex justify-content-center p-2 col-2'
 					onClick={() => {
@@ -60,7 +63,15 @@ const NavBar = observer(() => {
 						device.setSelectedType({}) // обнуляю фильтр
 						device.setSelectedBrand({}) // - " -
 					}}>
-					КупиДевайс
+					Купидевайс
+					<span onClick={() => onSort()} style={{ textDecoration: 'no', textIndent: '20px' }}>
+						<Image
+							src={device.sort === 'DESC' ? caret_down : caret_up}
+							width={26}
+							height={26}
+							className='align-self-center'
+						/>
+					</span>
 				</NavLink>
 				<Nav style={{ color: 'white' }} className='p-2 col-4'>
 					<FormControl
@@ -80,10 +91,10 @@ const NavBar = observer(() => {
 					<Button
 						variant={'outline-light'}
 						onClick={() => handleBasket()}
-						onMouseOver={() => setAtrSrc(cart_black)}
-						onMouseOut={() => setAtrSrc(cart_white)}>
+						onMouseOver={() => setCartSrc(cart_black)}
+						onMouseOut={() => setCartSrc(cart_white)}>
 						<div className='d-flex align-itens-center justify-content-between'>
-							<Image src={atrSrc} width={20} height={20} className='align-self-center me-2' />
+							<Image src={cartSrc} width={20} height={20} className='align-self-center me-2' />
 							<div>{!count ? 'Корзина пуста' : <Declension val={count} />}</div>
 						</div>
 					</Button>

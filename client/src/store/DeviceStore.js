@@ -11,6 +11,7 @@ export default class DeviceStore {
 		this._totalCount = 0 // общее количество товаров
 		this._limit = 4 // количество товаров на 1 странице
 		this._searchValue = '' // подсстрока для поиска
+		this._sort = 'DESC' // сортировка по убытию
 		makeAutoObservable(this) // уловить существующие свойства объекта
 	}
 	setTypes(types) {
@@ -42,6 +43,9 @@ export default class DeviceStore {
 	setSearchValue(searchValue) {
 		this._searchValue = searchValue
 	}
+	setSort(sort) {
+		this._sort = sort
+	}
 	get types() {
 		return this._types
 	}
@@ -68,5 +72,8 @@ export default class DeviceStore {
 	}
 	get searchValue() {
 		return this._searchValue
+	}
+	get sort() {
+		return this._sort
 	}
 }

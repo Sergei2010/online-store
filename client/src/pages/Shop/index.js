@@ -26,7 +26,8 @@ const Shop = observer(() => {
 	useEffect(() => {
 		fetchTypes().then((data) => device.setTypes(data))
 		fetchBrands().then((data) => device.setBrands(data))
-		fetchDevices(null, null, 1, device.limit).then((data) => {
+		fetchDevices(null, null, 1, device.limit, device.sort).then((data) => {
+			// console.log('data--after--fetch: ', toJS(data))
 			device.setDevices(data.rows)
 			device.setTotalCount(data.count) // сколько товаров получили, поле "count" от сервера
 		})
@@ -35,15 +36,19 @@ const Shop = observer(() => {
 
 	useEffect(() => {
 		if (!device.searchValue) {
-			fetchDevices(device.selectedType.id, device.selectedBrand.id, device.page, device.limit).then(
-				(data) => {
-					device.setDevices(data.rows)
-					device.setTotalCount(data.count)
-				}
-			)
+			fetchDevices(
+				device.selectedType.id,
+				device.selectedBrand.id,
+				device.page,
+				device.limit,
+				device.sort
+			).then((data) => {
+				device.setDevices(data.rows)
+				device.setTotalCount(data.count)
+			})
 		} else {
 			// поиск по названию товара
-			fetchDevices(null, null, 1, device.totalCount)
+			fetchDevices(null, null, 1, device.totalCount, device.sort)
 				.then((data) => {
 					return (data = Object.values(data.rows))
 				})
@@ -60,8 +65,7 @@ const Shop = observer(() => {
 				})
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [device.page, device.selectedType, device.selectedBrand, device.searchValue])
-
+	}, [device.page, device.selectedType, device.selectedBrand, device.searchValue, device.sort])
 	return (
 		<Container>
 			<div className='mt-4 mb-4'>

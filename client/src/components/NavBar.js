@@ -21,13 +21,16 @@ const NavBar = observer(() => {
 	const { device } = useContext(Context)
 	const [value, setValue] = useState('')
 	const [count, setCount] = useState(null)
+
 	useEffect(() => {
 		const deviceCount = toJS(user.devices).filter(function (id) {
 			return id !== null // исключаю нулевые значения id
 		}).length
 		setCount(deviceCount)
 	}, [user.devices])
+
 	const [cartSrc, setCartSrc] = useState(cart_white)
+
 	const history = useHistory()
 	const logOut = () => {
 		user.setUser({})
@@ -64,7 +67,7 @@ const NavBar = observer(() => {
 						device.setSelectedBrand({}) // - " -
 					}}>
 					Купидевайс
-					<span onClick={() => onSort()} style={{ textDecoration: 'no', textIndent: '20px' }}>
+					<span onClick={() => onSort()} style={{ textDecoration: 'no', textIndent: '30px' }}>
 						<Image
 							src={device.sort === 'DESC' ? caret_down : caret_up}
 							width={26}

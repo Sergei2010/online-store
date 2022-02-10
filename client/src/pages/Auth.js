@@ -24,7 +24,7 @@ const Auth = observer(() => {
 				// console.log('data--after--login: ', data)
 			} else {
 				data = await registration(email, password)
-				console.log('data--after--registration: ', data)
+				// console.log('data--after--registration: ', data)
 			}
 			user.setUser(data) // почему "user"? ставлю "data"
 			user.setIsAuth(true)

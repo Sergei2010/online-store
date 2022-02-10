@@ -6,28 +6,36 @@ import { Card, Col, Container, Image, Row } from 'react-bootstrap'
 import { fetchDevices, fetchBrands, fetchTypes } from '../../http/deviceAPI'
 import { deleteDeviceFromBasket } from '../../http/basketAPI'
 import TotalPriceInBasket from './totalPriceInBasket'
+import { useHistory } from 'react-router-dom'
+import { SHOP_ROUTE } from '../../utils/consts'
 import './style.css'
 
 const Basket = observer(() => {
 	const { user } = useContext(Context)
 	const { device } = useContext(Context)
+	const history = useHistory()
 	// получаю массив id товаров в корзине
 	let ids = toJS(user.devices).filter(function (id) {
 		return id !== null // исключаю нулевые значения id
 	})
-	// console.log('device--in--basket: ', ids)
-	// получаю количество товаров в корзине
+	// console.log('ids--in--basket--before: ', ids)
+	// ф-ия для опр. количество определённого товара в корзине
 	const count = (item) => {
 		return ids.filter((id) => id === item).length
 	}
 	// ниже добавлю ключи "count" и "totalPrice" в объект device
-	// console.log('count--for--device: ', count(55))
+	// console.log('count--for--device: ', count(70))
 	const [devices, setDevices] = useState([])
 	const [types, setTypes] = useState([])
 	const [brands, setBrands] = useState([])
+	// получаю данные для массивов Types, Brands, Devices
 	useEffect(() => {
-		fetchTypes().then((data) => setTypes(data))
-		fetchBrands().then((data) => setBrands(data))
+		fetchTypes().then((data) => {
+			setTypes(data)
+		})
+		fetchBrands().then((data) => {
+			setBrands(data)
+		})
 		fetchDevices(null, null, 1, device.totalCount)
 			.then((data) => {
 				return Object.values(data.rows)
@@ -42,7 +50,7 @@ const Basket = observer(() => {
 			.then((data) => {
 				// первоначальный массив devices в корзине, включая (count && total.price)
 				setDevices(data)
-				console.log('data--in--basket: ', data)
+				// console.log('devices--in--basket: ', data)
 			})
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
@@ -90,6 +98,9 @@ const Basket = observer(() => {
 			})
 			setDevices(data) // изменяю state для перерисовки страницы
 			// console.log('data--in--State--after--delete: ', data)
+			if (ids.length === 0) {
+				history.push(SHOP_ROUTE)
+			}
 		} catch (e) {
 			alert(e.message)
 		}
@@ -97,6 +108,7 @@ const Basket = observer(() => {
 	// уменьшаю кол-во товара в корзине
 	const dicrementCount = (device) => {
 		device.count--
+		device.totalPrice = device.count * device.price
 		if (device.count === 0) {
 			deleteFromBasket(user, device)
 		}
@@ -106,7 +118,7 @@ const Basket = observer(() => {
 		const updatedObj = {
 			...devices[objIndex],
 			count: device.count,
-			totalPrice: device.count * device.price
+			totalPrice: device.totalPrice
 		}
 		// make final new array of objects by combining updated object
 		const updatedDevices = [
@@ -117,6 +129,15 @@ const Basket = observer(() => {
 		// изменяю state после уменьшения количества товара
 		setDevices(updatedDevices)
 		// console.log('devices--after--dicrementCount', devices)
+		const index = ids.findIndex((id) => {
+			return id === device.id
+		})
+		ids.splice(index, 1)
+		// console.log('ids--in--basket--after--dicrementCount', ids)
+		user.setDevices(ids)
+		if (ids.length === 0) {
+			return history.push(SHOP_ROUTE)
+		}
 		return device
 	}
 	// увеличиваю кол-во товара в корзине
@@ -137,6 +158,9 @@ const Basket = observer(() => {
 			...devices.slice(objIndex + 1)
 		]
 		setDevices(updatedDevices)
+		ids.push(device.id)
+		// console.log('ids--in--basket--after--incrementCount', ids)
+		user.setDevices(ids)
 		return device
 	}
 

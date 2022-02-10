@@ -50,7 +50,7 @@ const DevicePage = observer(() => {
 	}
 
 	return (
-		<Container className='mt-2'>
+		<Container className='mt-4'>
 			<Row>
 				<Col md={4}>
 					{deviceData.img && (
